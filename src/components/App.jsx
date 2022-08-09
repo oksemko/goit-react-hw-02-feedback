@@ -4,10 +4,9 @@ import { Section } from './Section/Section';
 import { Statistics } from './Statistics/Statistics';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Notification } from './Notification/Notification';
-// import Section from './Section';
-// import Statistics from './Statistics';
-// import FeedbackOptions from './FeedbackOptions';
-// import Notification from './Notification';
+
+import { Wrapper } from './App.styled';
+import { Title } from './App.styled';
 
 
 
@@ -18,19 +17,20 @@ export class App extends Component {
     bad: 0
   };
 
-  countTotalFeedBack() {
+  countTotalFeedback() {
     const { good, neutral, bad } = this.state;
     return good + neutral + bad;
   }
 
-  countPositiveFeedbackPercentage() {
+    countPositiveFeedbackPercentage(){
     const { good } = this.state;
-    const total = this.countTotalFeedBack();
-    const positivePercentage = total ? ((good / total * 100).toFixed(0)) : 0;
+    const total = this.countTotalFeedback();
+    const positivePercentage = total ? ((good / total) * 100).toFixed(0) : 0;
+
     return Number(positivePercentage);
   }
 
-  onLeaveFeedback = event => {
+    onLeaveFeedback = event => {
     const { name } = event.target;
     this.setState(prevState => {
       return { [name]: prevState[name] + 1 };
@@ -39,20 +39,22 @@ export class App extends Component {
 
   render() {
     const { good, neutral, bad } = this.state;
-    const total = this.countTotalFeedBack();
+    const total = this.countTotalFeedback();
     const positivePercentage = this.countPositiveFeedbackPercentage();
 
     return (
-      <>
-        <Section title="Please leave feedback">
-          <FeedbackOptions
-            options={Object.keys(this.state)}
-            onLeaveFeedback={this.onLeaveFeedback}
-          />
+      <Wrapper>
+        <Section title>
+          <Title>Please leave feedback</Title>
+            <FeedbackOptions
+              options={Object.keys(this.state)}
+              onLeaveFeedback={this.onLeaveFeedback}
+            />
         </Section>
-        <Section title="Statistics">
-          {total ? (
-            <Notification message="There is no feedback" />
+        <Section title>
+          <Title>Statistics</Title>
+          {!total ? (
+            <Notification message="There is no feedback 👀" />
           ) : (
             <Statistics
               good={good}
@@ -63,7 +65,7 @@ export class App extends Component {
             />
           )}
         </Section>
-      </>
+      </Wrapper>
     );
   }
 }
